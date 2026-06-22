@@ -24,5 +24,5 @@ A question-answering system that retrieves relevant context from a private docum
 |-----------|---------|--------|
 | Project setup | venv, .env, .gitignore | ✅ Done |
 | Ingestion pipeline | PDF extraction, chunking, embedding, FAISS index | ✅ Done |
-| Query pipeline | Semantic search, context retrieval, LLM answer generation | ⏳ Pending |
+| Query pipeline | Semantic search, context retrieval, LLM answer generation | ✅ Done |
 | Flask UI | Web interface for querying the document | ⏳ Pending |
