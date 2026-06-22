@@ -16,7 +16,7 @@ A question-answering system that retrieves relevant context from a private docum
 
 | Week | Topic | Status |
 |------|-------|--------|
-| Week 8 | RAG System | ✅ In Progress |
+| Week 8 | RAG System | ✅ Complete |
 
 ## Known Limitations
 - Fixed-size chunking can split scenes across chunk boundaries, causing retrieval failure for questions about specific events. Chapter-aware chunking would improve this.
@@ -28,4 +28,4 @@ A question-answering system that retrieves relevant context from a private docum
 | Project setup | venv, .env, .gitignore | ✅ Done |
 | Ingestion pipeline | PDF extraction, chunking, embedding, FAISS index | ✅ Done |
 | Query pipeline | Semantic search, context retrieval, LLM answer generation | ✅ Done |
-| Flask UI | Web interface for querying the document | ⏳ Pending |
+| Flask UI | Magical Harry Potter theme, dark/light mode, page attribution | ✅ Done |
