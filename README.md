@@ -18,6 +18,9 @@ A question-answering system that retrieves relevant context from a private docum
 |------|-------|--------|
 | Week 8 | RAG System | ✅ In Progress |
 
+## Known Limitations
+- Fixed-size chunking can split scenes across chunk boundaries, causing retrieval failure for questions about specific events. Chapter-aware chunking would improve this.
+
 ## Milestones
 
 | Milestone | Details | Status |

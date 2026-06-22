@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Potter RAG</title>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root[data-theme="dark"] {
+            --bg-page: #1A0E2E;
+            --bg-panel: #0F0820;
+            --bg-input: #0F0820;
+            --border: #3D2B5A;
+            --text-primary: #F5E6C8;
+            --text-secondary: #C4B49A;
+            --text-muted: #4A3B6B;
+            --accent: #C8A96E;
+            --accent-hover: #D4BA82;
+            --btn-text: #1A0E2E;
+            --subtitle-color: #8B7BA8;
+        }
+
+        :root[data-theme="light"] {
+            --bg-page: #F5EDD6;
+            --bg-panel: #EDE0C4;
+            --bg-input: #EDE0C4;
+            --border: #C4A882;
+            --text-primary: #2C1810;
+            --text-secondary: #5C4033;
+            --text-muted: #9C8B7A;
+            --accent: #8B5E3C;
+            --accent-hover: #6B4429;
+            --btn-text: #F5EDD6;
+            --subtitle-color: #7A5C44;
+        }
+
+        body {
+            font-family: 'Crimson Text', Georgia, serif;
+            background: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 48px 24px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container { max-width: 780px; margin: 0 auto; }
+
+        .topbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 40px;
+        }
+
+        .theme-toggle {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            border: 1px solid var(--border);
+            background: transparent;
+            border-radius: 6px;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .theme-toggle:hover { border-color: var(--accent); }
+
+        .eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.18em;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 16px;
+            opacity: 0.85;
+        }
+
+        h1 {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 42px;
+            font-weight: 400;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 10px;
+        }
+
+        h1 em {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .book-title {
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 18px;
+            color: var(--accent);
+            font-style: italic;
+            margin-bottom: 12px;
+            letter-spacing: 0.02em;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: var(--subtitle-color);
+            line-height: 1.7;
+            font-style: italic;
+            margin-bottom: 36px;
+        }
+
+        .divider {
+            width: 120px;
+            height: 1px;
+            background: var(--accent);
+            opacity: 0.4;
+            margin: 0 0 32px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 28px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            height: 52px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Crimson Text', Georgia, serif;
+            font-size: 17px;
+            padding: 0 18px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]::placeholder { color: var(--text-muted); font-style: italic; }
+        input[type="text"]:focus { border-color: var(--accent); }
+
+        button.ask-btn {
+            height: 52px;
+            padding: 0 28px;
+            background: var(--accent);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 8px;
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 17px;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+            letter-spacing: 0.03em;
+        }
+
+        button.ask-btn:hover { background: var(--accent-hover); }
+        button.ask-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .panel.visible { display: block; }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .pages-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: var(--accent);
+            letter-spacing: 0.08em;
+        }
+
+        .answer-body {
+            padding: 24px 28px;
+            color: var(--text-secondary);
+            font-size: 18px;
+            line-height: 1.85;
+            font-style: italic;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="topbar">
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀ Parchment mode</button>
+        </div>
+
+        <div class="eyebrow">✦ Magical Archives</div>
+        <h1>Ask anything about<br><em>Harry Potter.</em></h1>
+        <div class="book-title">The Philosopher's Stone — Book I</div>
+        <p class="subtitle">Answers are retrieved from the actual pages of the book,<br>not conjured from thin air.</p>
+        <div class="divider"></div>
+
+        <div class="input-row">
+            <input type="text" id="question" placeholder="e.g. What is the name of Harry's owl?" />
+            <button class="ask-btn" id="askBtn" onclick="askQuestion()">Ask ✦</button>
+        </div>
+
+        <div class="panel" id="answerPanel">
+            <div class="panel-header">
+                <span class="panel-label">The answer</span>
+                <span class="pages-badge" id="pagesBadge"></span>
+            </div>
+            <div class="answer-body" id="answerBody"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const html = document.documentElement;
+        const saved = localStorage.getItem("hp-theme") || "dark";
+        html.setAttribute("data-theme", saved);
+        updateToggleLabel(saved);
+
+        function toggleTheme() {
+            const current = html.getAttribute("data-theme");
+            const next = current === "dark" ? "light" : "dark";
+            html.setAttribute("data-theme", next);
+            localStorage.setItem("hp-theme", next);
+            updateToggleLabel(next);
+        }
+         function updateToggleLabel(theme) {
+            document.getElementById("themeBtn").textContent = theme === "dark" ? "☀ Parchment mode" : "☾ Night mode";
+        }
+
+        function askQuestion() {
+            const question = document.getElementById("question").value.trim();
+            if (!question) return;
+
+            const btn = document.getElementById("askBtn");
+            const panel = document.getElementById("answerPanel");
+            const answerBody = document.getElementById("answerBody");
+            const pagesBadge = document.getElementById("pagesBadge");
+
+            btn.disabled = true;
+            btn.textContent = "Consulting the book...";
+            panel.classList.remove("visible");
+
+            fetch("/ask",{
+                method: "POST", 
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({question: question})
+            })
+            .then(res => res.json())
+            .then(data => {
+                answerBody.textContent = data.answer;
+                pagesBadge.textContent = "Pages: " + data.pages.join(", ");
+                panel.classList.add("visible");
+                btn.disabled = false;
+                btn.textContent = "Ask ✦";
+            })
+            .catch(() => {
+                answerBody.textContent = "Something went wrong. Please try again.";
+                panel.classList.add("visible");
+                btn.disabled = false;
+                btn.textContent = "Ask ✦";
+            });
+        }
+
+        document.getElementById("question").addEventListener("keydown", function(e) {
+            if(e.key === "Enter") askQuestion();
+        });
+    </script>
+</body>
+</html>
