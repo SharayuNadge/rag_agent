@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+EMBEDDING_MODEL = "paraphrase-MiniLM-L3-v2"
 TOP_K = 5
 model = SentenceTransformer(EMBEDDING_MODEL)
 

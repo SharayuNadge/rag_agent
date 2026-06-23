@@ -10,7 +10,7 @@ load_dotenv()
 PDF_PATH = "harry-potter-and-the-philosophers-stone-by-jk-rowling.pdf"
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 100
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
+EMBEDDING_MODEL = "paraphrase-MiniLM-L3-v2"
 
 def extract_text(pdf_path):
     doc = fitz.open(pdf_path)
