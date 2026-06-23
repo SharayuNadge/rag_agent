@@ -158,6 +158,23 @@
         button.ask-btn:hover { background: var(--accent-hover); }
         button.ask-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+
+        button.reset-btn {
+            height: 52px;
+            padding: 0 20px;
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'IM Fell English', Georgia, serif;
+            font-size: 17px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+            white-space: nowrap;
+        }
+
+        button.reset-btn:hover { border-color: var(--accent); }
+
         .panel {
             background: var(--bg-panel);
             border: 1px solid var(--border);
@@ -218,6 +235,7 @@
         <div class="input-row">
             <input type="text" id="question" placeholder="e.g. What is the name of Harry's owl?" />
             <button class="ask-btn" id="askBtn" onclick="askQuestion()">Ask ✦</button>
+            <button class="reset-btn" id="resetBtn" onclick="resetQuestion()">✦ Clear</button>
         </div>
 
         <div class="panel" id="answerPanel">
@@ -284,6 +302,14 @@
         document.getElementById("question").addEventListener("keydown", function(e) {
             if(e.key === "Enter") askQuestion();
         });
+
+        function resetQuestion() {
+            document.getElementById("question").value = "";
+            document.getElementById("answerPanel").classList.remove("visible");
+            document.getElementById("answerBody").textContent = "";
+            document.getElementById("pagesBadge").textContent = "";
+            document.getElementById("question").focus();
+        }
     </script>
 </body>
 </html>

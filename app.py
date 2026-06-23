@@ -8,7 +8,6 @@ load_dotenv()
 
 app = Flask(__name__)
 index, chunks = load_index()
-model = SentenceTransformer("all-MiniLM-L6-v2")
 
 @app.route("/")
 def home():
@@ -22,7 +21,7 @@ def ask():
         return jsonify({"error": "No question provided"}), 400
     
     results = search(question, index, chunks)
-    pages = list(set([r["page"] for r in results]))
+    pages = [f"p.{r["page"]} ({r["confidence"]}%)" for r in results]
     context = build_context(results)
     answer = ask_llm(question, context)
 
@@ -32,4 +31,4 @@ def ask():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    app.run(debug=True, port=8080, use_reloader=False)

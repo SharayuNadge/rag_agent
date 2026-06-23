@@ -1,15 +1,18 @@
+import os
+os.environ["HF_HUB_DISABLE_IMPLICIT_TOKEN"] = "1"
+
 import json
 import faiss
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from groq import Groq
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 TOP_K = 5
+model = SentenceTransformer(EMBEDDING_MODEL)
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
@@ -20,13 +23,15 @@ def load_index():
     return index, chunks
 
 def search(query, index, chunks):
-    model = SentenceTransformer(EMBEDDING_MODEL)
     query_vector = model.encode([query])
     distances, indices = index.search(np.array(query_vector), TOP_K)
     results = []
-    for i in indices[0]:
-        if i != -1:
-            results.append(chunks[i])
+    for idx, dist in zip(indices[0], distances[0]):
+        if idx != -1:
+            chunk = chunks[idx].copy()
+            confidence = round((1 / (1 + float(dist))) * 100, 1)
+            chunk["confidence"] = confidence
+            results.append(chunk)
     return results
 
 def build_context(results):
