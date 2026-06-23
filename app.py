@@ -31,4 +31,7 @@ def ask():
     })
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080, use_reloader=False)
+    app.run(debug=os.environ.get("FLSK_ENV") =="development",
+            host="0.0.0.0",
+            port=int(os.environ.get("PORT", 8080)),
+            use_reloader=False)
