@@ -5,6 +5,8 @@ A Retrieval Augmented Generation (RAG) system built from scratch as part of a st
 ## Live Demo
 [Try the app on Hugging Face Spaces](https://huggingface.co/spaces/SharayuNadge/rag_harry_potter)
 
+>>NOTE :The app may take a few seconds to wake up if it hasn't been visited recently.
+
 ## Purpose
 A question-answering system that retrieves relevant context from a private document and uses an LLM to generate accurate, grounded answers.
 
