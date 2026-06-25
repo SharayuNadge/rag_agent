@@ -2,6 +2,9 @@
 
 A Retrieval Augmented Generation (RAG) system built from scratch as part of a structured Agentic AI Engineer curriculum.
 
+## Live Demo
+[Try the app on Hugging Face Spaces](https://huggingface.co/spaces/SharayuNadge/rag_harry_potter)
+
 ## Purpose
 A question-answering system that retrieves relevant context from a private document and uses an LLM to generate accurate, grounded answers.
 

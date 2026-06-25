@@ -21,7 +21,7 @@ def ask():
         return jsonify({"error": "No question provided"}), 400
     
     results = search(question, index, chunks)
-    pages = [f"p.{r["page"]} ({r["confidence"]}%)" for r in results]
+    pages = [f"p.{r['page']} ({r['confidence']}%)" for r in results]
     context = build_context(results)
     answer = ask_llm(question, context)
 
@@ -33,5 +33,5 @@ def ask():
 if __name__ == "__main__":
     app.run(debug=os.environ.get("FLSK_ENV") =="development",
             host="0.0.0.0",
-            port=int(os.environ.get("PORT", 8080)),
+            port=int(os.environ.get("PORT", 7860)),
             use_reloader=False)
